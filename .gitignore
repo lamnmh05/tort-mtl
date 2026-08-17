@@ -1,0 +1,11 @@
+data/
+outputs/
+wandb/
+    
+.env
+.pytest_cache/
+__pycache__/
+*.py[cod]
+.venv/
+outputs/*
+!outputs/.gitkeep

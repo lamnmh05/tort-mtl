@@ -1,0 +1,70 @@
+experiment_name: modernbert_legal_mtl
+output_dir: outputs/modernbert_legal_mtl
+
+model:
+  name: sbintuitions/modernbert-ja-310m
+  revision: null
+  tokenizer_name: sbintuitions/modernbert-ja-310m
+  use_fast_tokenizer: true
+  encoder_hidden_size: null  # Inferred at runtime and written to resolved_config.yaml.
+  model_dim: 768
+  num_heads: 12
+  ff_dim: 2048
+  dropout: 0.1
+  max_spans: 55
+  pooling: cls
+  re_hidden_dim: 384
+  tp_hidden_dim: 768
+  freeze_encoder: false
+
+data:
+  train_path: data/train001_split_ordered/train_90.jsonl
+  dev_path: data/train001_split_ordered/dev_10.jsonl
+  test_path: data/LJPJT26-test001.jsonl
+  max_length: 402
+  max_u_spans: 15
+  max_p_spans: 25
+  max_d_spans: 29
+
+loss:
+  plaintiff: 1.0
+  defendant: 1.0
+  tort: 1.0
+
+training:
+  optimizer: adamw
+  scheduler: linear
+  num_train_epochs: 20
+  per_device_train_batch_size: 4
+  per_device_eval_batch_size: 4
+  gradient_accumulation_steps: 4
+  encoder_learning_rate: 2.0e-5
+  task_learning_rate: 1.0e-4
+  weight_decay: 0.01
+  adam_beta1: 0.9
+  adam_beta2: 0.999
+  adam_epsilon: 1.0e-8
+  warmup_ratio: 0.1
+  max_grad_norm: 1.0
+  bf16: true
+  early_stopping_patience: 5
+
+evaluation:
+  threshold: 0.5
+  selection_metric: selection_score
+
+logging:
+  tqdm: true
+  wandb:
+    enabled: true
+    project: mtl
+    entity: null
+    run_name: null
+    mode: offline
+
+system:
+  device: cuda:3
+  seed: 42
+  deterministic: true
+  num_workers: 0
+  pin_memory: true
